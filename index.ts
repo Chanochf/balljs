@@ -1,5 +1,3 @@
-
-
 /**
  * Get the chosen values from the user and prpare for sending to server
  */
@@ -22,19 +20,26 @@ const get_values = () => {
   };
   return data;
 };
-
+/**
+ * Fetch the data from server
+ */
 const fetch_data = async () => {
   const headers = new Headers();
   let values = get_values();
-
-  const data = await fetch("https://nbaserver-q21u.onrender.com/api/filter", {
-    method: "POST",
-    headers: { "content-type": "application/json" },
-    body: JSON.stringify(values),
-  });
-  return await data.json();
+  try {
+    const data = await fetch("https://nbaserver-q21u.onrender.com/api/filter", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify(values),
+    });
+    return await data.json();
+  } catch (err: any) {
+    document.querySelector(".player_search")!.innerHTML = err.message;
+  }
 };
-
+/**
+ * Represent the points selection
+ */
 const sliders = {
   sliders: [
     document.getElementById("point_range"),
@@ -58,7 +63,9 @@ const sliders = {
       }
     }
   },
-
+  /**
+   * Get the selected data fron the user choises
+   */
   get_data: function () {
     let data: string[] = [];
     for (let i = 0; i < this.sliders.length; i += 2) {
@@ -68,7 +75,9 @@ const sliders = {
     return data;
   },
 };
-
+/**
+ * Orgnize the data from the server and displey in position
+ */
 function display_data(data: [{}]) {
   let container = document.getElementById("container")!;
   document.body.appendChild(container);
@@ -110,20 +119,27 @@ function display_data(data: [{}]) {
   });
   container.appendChild(table);
 }
-
+/**
+ * Init add player button
+ */
 function init_add_player() {
   var elements = document.getElementsByClassName("add_button");
   for (var i = 0; i < elements.length; i++) {
     elements[i].addEventListener("click", add_player);
   }
 }
+/**
+ * add player to the team
+ */
 function add_player(event: Event) {
   const table = document.getElementsByTagName("table");
   const plyer_num: HTMLInputElement = <HTMLInputElement>event.target;
   const player = table[0].rows[+plyer_num.value + 1];
   displey_plyer(player);
 }
-
+/**
+ * Display the player in the page
+ */
 function displey_plyer(plyer: HTMLTableRowElement) {
   const position: string = plyer.cells[4].innerHTML;
   const pos_in_team = document.getElementById(position)!;

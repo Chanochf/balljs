@@ -50,25 +50,39 @@ var get_values = function () {
     };
     return data;
 };
+/**
+ * Fetch the data from server
+ */
 var fetch_data = function () { return __awaiter(_this, void 0, void 0, function () {
-    var headers, values, data;
+    var headers, values, data, err_1;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 headers = new Headers();
                 values = get_values();
+                _a.label = 1;
+            case 1:
+                _a.trys.push([1, 4, , 5]);
                 return [4 /*yield*/, fetch("https://nbaserver-q21u.onrender.com/api/filter", {
                         method: "POST",
                         headers: { "content-type": "application/json" },
                         body: JSON.stringify(values),
                     })];
-            case 1:
+            case 2:
                 data = _a.sent();
                 return [4 /*yield*/, data.json()];
-            case 2: return [2 /*return*/, _a.sent()];
+            case 3: return [2 /*return*/, _a.sent()];
+            case 4:
+                err_1 = _a.sent();
+                document.querySelector(".player_search").innerHTML = err_1.message;
+                return [3 /*break*/, 5];
+            case 5: return [2 /*return*/];
         }
     });
 }); };
+/**
+ * Represent the points selection
+ */
 var sliders = {
     sliders: [
         document.getElementById("point_range"),
@@ -96,6 +110,9 @@ var sliders = {
             _loop_1(i);
         }
     },
+    /**
+     * Get the selected data fron the user choises
+     */
     get_data: function () {
         var data = [];
         for (var i = 0; i < this.sliders.length; i += 2) {
@@ -105,6 +122,9 @@ var sliders = {
         return data;
     },
 };
+/**
+ * Orgnize the data from the server and displey in position
+ */
 function display_data(data) {
     var container = document.getElementById("container");
     document.body.appendChild(container);
@@ -145,18 +165,27 @@ function display_data(data) {
     });
     container.appendChild(table);
 }
+/**
+ * Init add player button
+ */
 function init_add_player() {
     var elements = document.getElementsByClassName("add_button");
     for (var i = 0; i < elements.length; i++) {
         elements[i].addEventListener("click", add_player);
     }
 }
+/**
+ * add player to the team
+ */
 function add_player(event) {
     var table = document.getElementsByTagName("table");
     var plyer_num = event.target;
     var player = table[0].rows[+plyer_num.value + 1];
     displey_plyer(player);
 }
+/**
+ * Display the player in the page
+ */
 function displey_plyer(plyer) {
     var position = plyer.cells[4].innerHTML;
     var pos_in_team = document.getElementById(position);
