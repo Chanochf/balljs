@@ -146,6 +146,24 @@ function displey_plyer(plyer: HTMLTableRowElement) {
   pos_in_team.innerHTML = plyer.cells[2].innerHTML;
   pos_in_team.style.padding = "5%";
 }
+
+var id = undefined;
+function myMove() {
+  var elem = document.getElementById("myAnimation");   
+  var pos = 0;
+  clearInterval(id);
+  id = setInterval(frame, 10);
+  function frame() {
+    if (pos == 350) {
+      clearInterval(id);
+    } else {
+      pos++; 
+      elem.style.top = pos + 'px'; 
+      elem.style.left = pos + 'px'; 
+    }
+  }
+}
+
 sliders.init();
 const submit_button = document.getElementById("submitBtn")!;
 

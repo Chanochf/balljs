@@ -192,7 +192,30 @@ function displey_plyer(plyer) {
     pos_in_team.innerHTML = plyer.cells[2].innerHTML;
     pos_in_team.style.padding = "5%";
 }
+var id = undefined;
+function myMove() {
+    var elem = document.getElementById("myAnimation");
+    var pos = 0;
+    var direction = 1
+    clearInterval(id);
+    id = setInterval(frame, 10);
+    function frame() {
+        if (!direction) {
+            pos -=3
+            elem.style.bottom = pos + 'px';
+            if(pos <= 0)
+                direction = 1
+        }
+        else {
+            pos+=3;
+            elem.style.bottom = pos + 'px';
+            if (pos >=350)
+                direction = 0
+        }
+    }
+}
 sliders.init();
+myMove()
 var submit_button = document.getElementById("submitBtn");
 submit_button.addEventListener("click", function (event) { return __awaiter(_this, void 0, void 0, function () {
     var res;
