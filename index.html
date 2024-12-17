@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="./index.js" defer></script>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header><h1>my fantasy team</h1></header>
+    <div id ="myAnimation">fff</div>
+    <main>
+        
+      <article class="players_viewer">
+        <ul>
+          c
+          <li id="C"></li>
+          pf
+          <li id="PF"></li>
+          sf
+          <li id="SF"></li>
+          sg
+          <li id="SG"></li>
+          pg
+          <li id="PG"></li>
+        </ul>
+      </article>
+      <form class="player_search">
+        <p>nba player search</p>
+        <label for="position">Choose a player pos:</label>
+        <select id="position">
+          <option value="C">c</option>
+          <option value="PF">pf</option>
+          <option value="SF">sf</option>
+          <option value="SG">sg</option>
+          <option value="PG">pg</option>
+        </select>
+        <div class="slidecontainer">
+          total points
+          <label for="point_range" id="point_range_lable"></label>
+          <input
+            type="range"
+            min="0"
+            max="2000"
+            value="6"
+            class="slider"
+            id="point_range"
+          />
+          2 points
+          <label for="2_point" id="2_point_lable"></label>
+          <input
+            type="range"
+            min="0"
+            max="100"
+            value="4"
+            class="slider"
+            id="2_point"
+          />
+          3 points
+          <label for="3_point" id="3_point_lable"></label>
+          <input
+            type="range"
+            min="0"
+            max="100"
+            value="5"
+            class="slider"
+            id="3_point"
+          />
+        </div>
+        <button id="submitBtn">
+          search <br />
+          player
+        </button>
+      </form>
+      <div id="container"></div>
+    </main>
+  </body>
+</html>
