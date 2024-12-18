@@ -20,6 +20,7 @@ const get_values = () => {
   };
   return data;
 };
+
 /**
  * Fetch the data from server
  */
@@ -37,11 +38,12 @@ const fetch_data = async () => {
     document.querySelector(".player_search")!.innerHTML = err.message;
   }
 };
+
 /**
  * Represent the points selection
  */
 const sliders = {
-  sliders: [
+  array_sliders: [
     document.getElementById("point_range"),
     document.getElementById("point_range_lable"),
     document.getElementById("2_point"),
@@ -50,9 +52,9 @@ const sliders = {
     document.getElementById("3_point_lable"),
   ],
   init: function () {
-    for (let i = 0; i < this.sliders.length; i += 2) {
-      let slider: HTMLInputElement = <HTMLInputElement>this.sliders[i];
-      let lable = this.sliders[i + 1];
+    for (let i = 0; i < this.array_sliders.length; i += 2) {
+      let slider: HTMLInputElement = <HTMLInputElement>this.array_sliders[i];
+      let lable = this.array_sliders[i + 1];
       if (slider && lable) {
         lable.innerHTML = slider.value;
         slider.oninput = () => {
@@ -63,33 +65,42 @@ const sliders = {
       }
     }
   },
+
   /**
    * Get the selected data fron the user choises
    */
   get_data: function () {
     let data: string[] = [];
-    for (let i = 0; i < this.sliders.length; i += 2) {
-      const element: HTMLInputElement = <HTMLInputElement>this.sliders[i];
+    for (let i = 0; i < this.array_sliders.length; i += 2) {
+      const element: HTMLInputElement = <HTMLInputElement>this.array_sliders[i];
       data.push(element.value);
     }
     return data;
   },
 };
+
 /**
  * Orgnize the data from the server and displey in position
  */
 function display_data(data: [{}]) {
-  let container = document.getElementById("container")!;
-  document.body.appendChild(container);
-  container.innerHTML = "";
-  let table = document.createElement("table");
-  let cols = Object.keys(data[0]);
-  let thead = document.createElement("thead");
-  let tr = document.createElement("tr");
-  let ths = document.createElement("th");
+  const container = document.getElementById("container")!;
+  document.body.appendChild(container); //?
+  container.innerHTML = ""; //?
+  const table = document.createElement("table");
+  const cols = Object.keys(data[0]);
+  const thead = document.createElement("thead");
+  const tr = document.createElement("tr");
+  const ths = document.createElement("th");
   tr.appendChild(ths);
-  cols.forEach((item) => {
-    let th = document.createElement("th");
+  cols.forEach((item, index) => {
+    if (
+      index == 0 ||
+      index == 10 ||
+      index == 3 ||
+      index == 4 ||
+      index == 5 ||
+      index == 7) return;
+    const th = document.createElement("th");
     th.innerText = item;
     tr.appendChild(th);
   });
@@ -104,14 +115,28 @@ function display_data(data: [{}]) {
     let button = document.createElement("button");
     button.innerText = "add player";
     button.className = "add_button";
+    button.style.backgroundColor = "brown";
+    button.style.color = "rgb(136, 116, 87)";
+    button.style.borderRadius = "5px";
+    button.style.cursor = "pointer";
+
     button.value = i.toString();
     i++;
     tdb.appendChild(button);
     tr.appendChild(tdb);
 
     // Loop through the values and create table cells
-    vals.forEach((elem) => {
-      let td = document.createElement("td");
+    vals.forEach((elem, index) => {
+      if (
+        index == 0 ||
+        index == 10 ||
+        index == 3 ||
+        index == 4 ||
+        index == 5 ||
+        index == 7
+      )
+        return;
+      let td: any = document.createElement("td")!;
       td.innerText = elem;
       tr.appendChild(td);
     });
@@ -119,6 +144,7 @@ function display_data(data: [{}]) {
   });
   container.appendChild(table);
 }
+
 /**
  * Init add player button
  */
@@ -128,6 +154,7 @@ function init_add_player() {
     elements[i].addEventListener("click", add_player);
   }
 }
+
 /**
  * add player to the team
  */
@@ -137,44 +164,57 @@ function add_player(event: Event) {
   const player = table[0].rows[+plyer_num.value + 1];
   displey_plyer(player);
 }
+
 /**
  * Display the player in the page
  */
 function displey_plyer(plyer: HTMLTableRowElement) {
-  const position: string = plyer.cells[4].innerHTML;
+  let pos: HTMLInputElement = <HTMLInputElement>(
+    document.getElementById("position")
+  );
+
+  const position: string = pos.value;
   const pos_in_team = document.getElementById(position)!;
-  pos_in_team.innerHTML = `${plyer.cells[2].innerHTML}\n${plyer.cells[5].innerHTML}\n${plyer.cells[6].innerHTML}\n${plyer.cells[8].innerHTML}`;
+  pos_in_team.innerHTML = `${plyer.cells[1].innerHTML}\n${plyer.cells[2].innerHTML}\n`;
   pos_in_team.style.padding = "5%";
 }
 
-var id:any = undefined;
+
 function myMove() {
-  var elem = document.getElementById("myAnimation");   
+  const elem = document.getElementById("myAnimation")!;
   if (!elem) {
     console.error("Element not found");
-    return
+    return;
   }
+  var id: any = undefined;
   var pos = 0;
   clearInterval(id);
+  var direction = 1;
   id = setInterval(frame, 10);
   function frame() {
-    if (pos == 350) {
-      clearInterval(id);
+    if (direction == 0) {
+      pos-=3;
+      elem.style.bottom = pos + "px";
+      if (pos <= 0 )
+        direction = 1
+      
     } else {
-      pos++; 
-      elem.style.top = pos + 'px';
-      elem.style.left = pos + 'px'; 
+      pos+=3;
+      elem.style.bottom = pos + "px";
+      if(pos >= 350)
+        direction=0
     }
+    
   }
+  
 }
 
 sliders.init();
 const submit_button = document.getElementById("submitBtn")!;
-
+myMove()
 submit_button.addEventListener("click", async (event) => {
   event.preventDefault();
   const res = await fetch_data();
-  console.log(res[0]);
   display_data(res);
   init_add_player();
 });
